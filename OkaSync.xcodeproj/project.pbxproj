@@ -6,10 +6,19 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXFileReference section */
+		4F4275AD1CB4ED2600BC509A /* OkaSync.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = OkaSync.rb; sourceTree = "<group>"; usesTabs = 1; };
+		4F4275AF1CB4ED8F00BC509A /* initialize.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = initialize.rb; path = include/initialize.rb; sourceTree = "<group>"; };
+		4F4275B01CB5077500BC509A /* fileIO.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = fileIO.rb; path = include/fileIO.rb; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		4F4275A61CB4ECFA00BC509A = {
 			isa = PBXGroup;
 			children = (
+				4F4275AF1CB4ED8F00BC509A /* initialize.rb */,
+				4F4275B01CB5077500BC509A /* fileIO.rb */,
+				4F4275AD1CB4ED2600BC509A /* OkaSync.rb */,
 			);
 			sourceTree = "<group>";
 		};
