@@ -1,16 +1,17 @@
 #/usr/bin/ruby
-$LOAD_PATH << './include'
+$LOAD_PATH << "./include"
+#puts $LOAD_PATH
 
 require "json"
+
 require "initialize.rb"
+require "synchronize.rb"
+
 
 confname = "/Users/oka/.OkaSyncConf"
 
 sourcedir = "/Users/oka/OkaSync_test/test1"
 targetdir = "/Users/oka/OkaSync_test/test2"
-
-sourceflag = "#{sourcedir}/.OkaSyncFlag"
-targetflag = "#{targetdir}/.OkaSyncFlag"
 
 sourceJson = "#{sourcedir}/.OkaSyncFlag.json"
 targetJson = "#{targetdir}/.OkaSyncFlag.json"
@@ -23,14 +24,25 @@ def listdir(dirname, json_data)
 	Dir.glob("#{dirname}/**/*").each{|fname|
 		mtime = File.mtime(fname).to_i
         inode = File.stat(fname).ino
-        puts "#{fname} #{mtime} #{inode}"
+		#        puts "#{fname} #{mtime} #{inode}"
+		fDir = 0  # 0 if not directory
+		if FileTest::directory?(fname)
+			fDir = 1
+		end
 		fname.gsub!("#{dirname}/", "")
-		puts dirname
-		json_data["file"][fname] = {"modtime" => mtime}
+		json_data["file"][fname] = {"modtime" => mtime, "fDir" => fDir, "fDel" => 0}
+	}
+	
+	json_data["file"].each{|key, value|
+		fname = key
+		if !File.exist?("#{dirname}/#{fname}")
+			puts "#{fname} has been deleted."
+			json_data["file"][fname]["fDel"] = 1
+		end
+
 	}
 end
-		
-# file が remove された場合はどう処理する？？
+
 
 
 
@@ -52,34 +64,7 @@ target_json_data = readJson(targetJson)
 listdir(targetdir, target_json_data)
 listdir(sourcedir, source_json_data)
 
-def sync(source_json_data, target_json_data)
-	if ( source_json_data["last_sync_time"] == target_json_data["last_sync_time"] )
-		synctime = source_json_data["last_sync_time"]
-	else
-		puts "Sync Time Error!"
-	end
-	
-	source_json_data["file"].each{|key, value|
-		if (target_json_data["file"][key] == nil)
-			puts "This is a new file."
-		else
-			sourceModTime = source_json_data["file"][key]["modtime"]
-			targetModTime = target_json_data["file"][key]["modtime"]
 
-			if ( sourceModTime > synctime)
-				puts "Source File was modified."
-				if (targetModTime > synctime)
-					puts "Target File was also modified.  Confilicts!"
-				end
-			elsif (targetModTime > synctime)
-				puts "Target File was modified."
-			else
-				puts "Both File were untouched."
-			end
-		puts "now is #{Time.now.to_i}"
-		end
-	}
-end
 
 
 sync(source_json_data, target_json_data)
@@ -94,10 +79,4 @@ writeJson(sourceJson, source_json_data)
 writeJson(targetJson, target_json_data)
 
 
-#puts getFileTime(json_data, "/Users/oka/OkaSync_test/test1/test2.tst")
-#puts getFileTime(json_data, "/Users/oka/OkaSync_test/test1/test2.ttt")
-
-
-
-
-
+puts "sync end."
