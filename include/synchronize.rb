@@ -38,54 +38,58 @@ def sync(source_json_data, target_json_data)
                     target_json_data["file"].delete(key)
                 else
                     if (targetModTime > synctime)
-                        if fDir_target == 1;    Dir.mkdir("#{sourceDir}/#{key}")
-                        else  copy("#{targetDir}/#{key}", "#{sourceDir}/#{key}")
+                        if fDir_target == 1
+                            Dir.mkdir("#{sourceDir}/#{key}")
+                        else
+                            copy("#{targetDir}/#{key}", "#{sourceDir}/#{key}")
                         end
-                        else  ## if target is older than synctime
+                    else  ## if target is older than synctime
                         if fDir_target == 1
                             File.delete("#{targetDir}/#{key}/*")
                             Dir.rmdir("#{targetDir}/#{key}")
-                        else File.delete("#{targetDir}/#{key}")
+                        else
+                            File.delete("#{targetDir}/#{key}")
                         end
                         source_json_data["file"].delete(key)
                         target_json_data["file"].delete(key)
                     end
                 end
             end
-        end
 
-        if  fDir_source == 1  ## if directory
-            if (target_json_data["file"][key] == nil) ## if directory not found in target, mkdir
-                Dir.mkdir("#{targetDir}/#{key}")
-            else
-                if target_json_data["file"][key]["fDir"] == 0 ## if target directory is not a directory, it's problem
-                    puts "Error! #{sourceDir}/#{key} is a directory but #{targetDir}/#{key} is not!"
-                end
-                # if both are existing directory, nothing hove to be done
-            end
-        
-        else ## if it is not a directory
-
-            if target_json_data["file"][key] == nil
-                puts "This is a new file in sourceDir."
-                copy("#{sourceDir}/#{key}", "#{targetDir}/#{key}")
-            else
-                sourceModTime = source_json_data["file"][key]["modtime"]
-                targetModTime = target_json_data["file"][key]["modtime"]
-            
-                if sourceModTime > synctime && targetModTime > synctime
-                    puts "Both have been modified. Confilicts!"
-                    timestr = Time.now.strftime("%y%m%d-%H%M")
-                    copy("#{sourceDir}/#{key}", "#{targetDir}/#{key}.confilct#{timestr}")
-                    puts "Source File has been modified."
-                elsif sourceModTime > synctime && targetModTime < synctime
-                    copy("#{sourceDir}/#{key}", "#{targetDir}/#{key}")
-                elsif sourceModTime < synctime && targetModTime > synctime
-                    copy("#{targeteDir}/#{key}", "#{sourceDir}/#{key}")
+        else # if fDel_source != 1
+            if  fDir_source == 1  ## if directory
+                if (target_json_data["file"][key] == nil) ## if directory not found in target, mkdir
+                    Dir.mkdir("#{targetDir}/#{key}")
                 else
-                    puts "Both File has been untouched."
+                    if target_json_data["file"][key]["fDir"] == 0 ## if target directory is not a directory, it's problem
+                        puts "Error! #{sourceDir}/#{key} is a directory but #{targetDir}/#{key} is not!"
+                    end
+                    # if both are existing directory, nothing hove to be done
                 end
+        
+            else ## if it is not a directory
+
+                if target_json_data["file"][key] == nil
+                    puts "This is a new file in sourceDir."
+                    copy("#{sourceDir}/#{key}", "#{targetDir}/#{key}")
+                else
+                    sourceModTime = source_json_data["file"][key]["modtime"]
+                    targetModTime = target_json_data["file"][key]["modtime"]
+            
+                    if sourceModTime > synctime && targetModTime > synctime
+                        puts "Both have been modified. Confilicts!"
+                        timestr = Time.now.strftime("%y%m%d-%H%M")
+                        copy("#{sourceDir}/#{key}", "#{targetDir}/#{key}.confilct#{timestr}")
+                        puts "Source File has been modified."
+                    elsif sourceModTime > synctime && targetModTime < synctime
+                        copy("#{sourceDir}/#{key}", "#{targetDir}/#{key}")
+                    elsif sourceModTime < synctime && targetModTime > synctime
+                        copy("#{targeteDir}/#{key}", "#{sourceDir}/#{key}")
+                    else
+                        puts "Both File has been untouched."
+                    end
                 #                puts "now is #{Time.now.to_i}"
+                end
             end
         end
     }
@@ -95,7 +99,7 @@ def sync(source_json_data, target_json_data)
         fDel_target = target_json_data["file"][key]["fDel"]
         
         if (source_json_data["file"][key] == nil)
-            if fDel_target == 1 ## if directory
+            if fDir_target == 1 ## if directory
                  Dir.mkdir("#{sourceDir}/#{key}")
             else
                 puts "This is a new file in targetDir."
@@ -104,4 +108,3 @@ def sync(source_json_data, target_json_data)
         end
     }
 end
-
