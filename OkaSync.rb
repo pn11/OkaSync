@@ -6,12 +6,11 @@ require "json"
 
 require "initialize.rb"
 require "synchronize.rb"
+require "listdir.rb"
 
 
-confname = "/Users/oka/.OkaSyncConf"
-
-sourcedir = "/Users/oka/OkaSync_test/test1"
-targetdir = "/Users/oka/OkaSync_test/test2"
+sourcedir = "/Users/oka/OkaSync_test/test1"  #input path to the source directory  (two directories are equal)
+targetdir = "/Users/oka/OkaSync_test/test2"  #input path to the target directory
 
 sourceJson = "#{sourcedir}/.OkaSyncFlag.json"
 targetJson = "#{targetdir}/.OkaSyncFlag.json"
@@ -20,39 +19,11 @@ targetJson = "#{targetdir}/.OkaSyncFlag.json"
 #for debugging
 #`rm #{sourceJson} #{targetJson}`
 
-def listdir(dirname, json_data)
-	Dir.glob("#{dirname}/**/*").each{|fname|
-		mtime = File.mtime(fname).to_i
-        inode = File.stat(fname).ino
-		#        puts "#{fname} #{mtime} #{inode}"
-		fDir = 0  # 0 if not directory
-		if FileTest::directory?(fname)
-			fDir = 1
-		end
-		fname.gsub!("#{dirname}/", "")
-		json_data["file"][fname] = {"modtime" => mtime, "fDir" => fDir, "fDel" => 0}
-	}
-	
-	json_data["file"].each{|key, value|
-		fname = key
-		if !File.exist?("#{dirname}/#{fname}")
-			puts "#{fname} has been deleted."
-			json_data["file"][fname]["fDel"] = 1
-		end
-
-	}
-end
-
-
 
 
 #
 #  Main Routine
 #
-
-
-
-#listdir(sourcedir)
 
 initialize_all(sourcedir, targetdir)
 
@@ -65,8 +36,6 @@ listdir(targetdir, target_json_data)
 listdir(sourcedir, source_json_data)
 
 
-
-
 sync(source_json_data, target_json_data)
 
 
@@ -75,6 +44,7 @@ target_json_data["last_sync_time"] = target_json_data["time"]
 synctime = Time.now.to_i
 source_json_data["time"] = synctime
 target_json_data["time"] = synctime
+
 writeJson(sourceJson, source_json_data)
 writeJson(targetJson, target_json_data)
 

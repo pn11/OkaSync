@@ -11,6 +11,7 @@
 		4F4275AF1CB4ED8F00BC509A /* initialize.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = initialize.rb; path = include/initialize.rb; sourceTree = "<group>"; };
 		4F4275B01CB5077500BC509A /* fileIO.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = fileIO.rb; path = include/fileIO.rb; sourceTree = "<group>"; };
 		4F47F73D1CC5524700C334C9 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		4F47F73E1CC5539D00C334C9 /* listdir.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = listdir.rb; path = include/listdir.rb; sourceTree = "<group>"; };
 		4FA2B5A61CBE8D4B0014EEA6 /* synchronize.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; name = synchronize.rb; path = include/synchronize.rb; sourceTree = "<group>"; };
 		4FA2B5A71CBE99D80014EEA6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -19,6 +20,7 @@
 		4F4275A61CB4ECFA00BC509A = {
 			isa = PBXGroup;
 			children = (
+				4F47F73E1CC5539D00C334C9 /* listdir.rb */,
 				4F47F73D1CC5524700C334C9 /* .gitignore */,
 				4FA2B5A71CBE99D80014EEA6 /* README.md */,
 				4FA2B5A61CBE8D4B0014EEA6 /* synchronize.rb */,

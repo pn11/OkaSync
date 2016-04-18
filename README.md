@@ -14,12 +14,12 @@ Sonyの電子ペーパーで論文を読むのに、WebDAVを使っている。�
 └── include
     ├── fileIO.rb       :jsonの管理ファイルをいじるためのもの
     ├── initialize.rb   :初期設定をする
+    ├── listdir.rb      :ディレクトリ構造を調べてjsonに入れる
     └── synchronize.rb  :同期のところ
 ```
 
 ## To do and issues
 
-- How to treat when a file is removed is not yet considered.
 - If two same names exist but one is a directory and the other is not, then error occurs
 
 
