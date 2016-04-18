@@ -17,8 +17,9 @@ def listdir(dirname, json_data)
         fname = key
         if !File.exist?("#{dirname}/#{fname}")
             puts "#{fname} has been deleted."
+            puts ""
             json_data["file"][fname]["fDel"] = 1
+            json_data["file"][fname]["modtime"] = Time.now.to_i
         end
-        
     }
 end

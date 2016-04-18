@@ -8,33 +8,37 @@ require "initialize.rb"
 require "synchronize.rb"
 require "listdir.rb"
 
-
-sourcedir = "/Users/oka/OkaSync_test/test1"  #input path to the source directory  (two directories are equal)
-targetdir = "/Users/oka/OkaSync_test/test2"  #input path to the target directory
-
-sourceJson = "#{sourcedir}/.OkaSyncFlag.json"
-targetJson = "#{targetdir}/.OkaSyncFlag.json"
+confname = "#{ENV["HOME"]}/.OkaSyncConf.json"
 
 
 #for debugging
 #`rm #{sourceJson} #{targetJson}`
 
 
-
 #
 #  Main Routine
 #
 
+
+json_data_conf = loadConfigure(confname)
+puts "1"
+
+sourcedir = json_data_conf["sourcedir"]
+targetdir = json_data_conf["targetdir"]
+
+puts "2"
+
 initialize_all(sourcedir, targetdir)
 
+puts "3"
 
+sourceJson = "#{sourcedir}/.OkaSyncFlag.json"
+targetJson = "#{targetdir}/.OkaSyncFlag.json"
 source_json_data = readJson(sourceJson)
 target_json_data = readJson(targetJson)
 
-
-listdir(targetdir, target_json_data)
 listdir(sourcedir, source_json_data)
-
+listdir(targetdir, target_json_data)
 
 sync(source_json_data, target_json_data)
 
