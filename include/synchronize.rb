@@ -10,10 +10,13 @@ end
 
 
 def sync(source_json_data, target_json_data)
-    if source_json_data["time"].to_i == target_json_data["time"].to_i
+    if (source_json_data["time"].to_f-  target_json_data["time"].to_f).abs < 10.0
         synctime = source_json_data["time"]
     else
-        puts "Error at synchronize.rb: Sync Time Error!" ## Error when last sync times are not same.
+      puts "Error at synchronize.rb: Sync Time Error!" ## Error when last sync times are not same.
+      puts "Difference of last sync time of soucedir and target dir are not within 10 sec."
+      puts "    Source dir last sync time: #{source_json_data["time"]}"
+      puts "    Target dir last sync time: #{target_json_data["time"]}"
         exit
     end
 
